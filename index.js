@@ -60,7 +60,8 @@ const client = new MongoClient(uri, {
         const userInfo = req.body;
         console.log(userInfo)
         const check = await userCollection.findOne({email: userInfo.email})
-        if (check == userInfo.email){
+        if (check && check.email === userInfo.email){
+          userCollection.updateOne({email: check.email},{$set: userInfo})
           return res.status(400).send({message: "email already exist"})
         }
         else{
@@ -73,7 +74,7 @@ const client = new MongoClient(uri, {
         const donorInfo = req.body;
         console.log(donorInfo)
         const check = await donorCollection.findOne({email: donorInfo.email})
-        if (check === donorInfo.email){
+        if (check && check.email === donorInfo.email){
           return res.status(400).send({message: "already registered"})
         }
         else{
